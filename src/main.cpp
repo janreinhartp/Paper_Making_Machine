@@ -43,7 +43,7 @@ String setting_items[NUM_SETTING_ITEMS][2] = { // array with item names
     {"Water", "MIN"},
     {"Mixer", "MIN"},
     {"Discharge", "MIN"},
-    {"Length", "CM"},
+    {"Length", "INCH"},
     {"Drying", "MIN"},
     {"MoveToEnd", "SEC"}};
 
@@ -76,8 +76,8 @@ int PaperSensorPin = 32;
 bool PaperFeedbackStatus = false;
 ezButton FeedBackPaper(PaperSensorPin);
 
-double lengthCalibration = 115;
-double lengthDisplayCalibration = 70;
+double lengthCalibration = 190;
+double lengthDisplayCalibration = 190;
 int RotaryValue = 0;
 
 unsigned long currentMillisCutter;
@@ -132,14 +132,24 @@ void setRotaryEncoder()
 
 void saveSettings()
 {
-    Settings.putDouble("waterpump", parametersTimer[0]);
+    Settings.putDouble("waterpump", parametersTimer[2]);
     Settings.putDouble("bleachpump", parametersTimer[1]);
-    Settings.putDouble("starchpump", parametersTimer[2]);
+    Settings.putDouble("starchpump", parametersTimer[0]);
     Settings.putDouble("mixertimer", parametersTimer[3]);
     Settings.putDouble("discharge", parametersTimer[4]);
     Settings.putDouble("length", parametersTimer[5]);
     Settings.putDouble("dryingTime", parametersTimer[6]);
     Settings.putDouble("movingTime", parametersTimer[7]);
+    Serial.println("---- Saving Timer  Settings ----");
+    Serial.println("Pump Timer : " + String(parametersTimer[2]));
+    Serial.println("Pump Bleach Timer : " + String(parametersTimer[1]));
+    Serial.println("Pump Starch Timer : " + String(parametersTimer[0]));
+    Serial.println("Mixer Timer : " + String(parametersTimer[3]));
+    Serial.println("Discharge Timer : " + String(parametersTimer[4]));
+    Serial.println("Length : " + String(parametersTimer[5]));
+    Serial.println("Drying Time : " + String(parametersTimer[6]));
+    Serial.println("To End : " + String(parametersTimer[7]));
+    Serial.println("---- Saving Timer  Settings ----");
 }
 void loadSettings()
 {
@@ -452,7 +462,7 @@ void refreshScreen()
             switch (RunAutoStatus)
             {
             case 1:
-                myNex.writeStr("txtbCurrentL.txt", "  " + String((double)rotaryEncoder.readEncoder() / lengthDisplayCalibration) + "  CM");
+                myNex.writeStr("txtbCurrentL.txt", "  " + String((double)rotaryEncoder.readEncoder() / lengthDisplayCalibration) + "  INCH");
                 myNex.writeStr("txtbProcess.txt", "   Filling Mixer");
                 myNex.writeStr("txtbRemainTime.txt", "   " + String(Water.getTimeRemaining()));
                 break;
@@ -490,7 +500,7 @@ void refreshScreen()
                 default:
                     break;
                 }
-                myNex.writeStr("txtbSecondary.txt", "  " + String((double)rotaryEncoder.readEncoder() / lengthDisplayCalibration) + "  CM");
+                myNex.writeStr("txtbSecondary.txt", "  " + String((double)rotaryEncoder.readEncoder() / lengthDisplayCalibration) + "  INCH");
                 break;
             default:
                 break;
